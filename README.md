@@ -5,8 +5,8 @@ seven-region legend, eleven drawn cards and a map keyed to them. No photographs 
 every illustration is vector drawn inside `render.py`.
 
 [![bounty](https://make.fun/badge/news-image-20261122.svg)](https://make.fun/bounty/news-image-20261122)
-![rank](https://make.fun/badge/perasyudha/news22-radar/rank.svg)
-![reward](https://make.fun/badge/reward.svg)
+[![rank](https://make.fun/badge/news-image-20261122/perasyudha/news22-frontpage/rank.svg)](https://make.fun/bounty/news-image-20261122/leaderboard)
+[![reward](https://make.fun/badge/news-image-20261122/perasyudha/news22-frontpage/reward.svg)](https://make.fun/bounty/news-image-20261122)
 
 Bounty page: https://make.fun/bounty/news-image-20261122
 
