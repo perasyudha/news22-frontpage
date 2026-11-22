@@ -447,27 +447,34 @@ def project(lon, lat, box):
 def draw_map(d, box, markers):
     x0, y0, x1, y1 = box
     d.rectangle(box, fill=(238, 232, 219), outline=RULE)
+    pad = 12
+    box = (x0 + pad, y0 + pad, x1 - pad, y1 - pad)
     step = 5
     for lat in range(-85, 90, step):
         for lon in range(-180, 180, step):
             if any(inside(poly, lon + step / 2, lat + step / 2) for poly in LAND):
                 px, py = project(lon + step / 2, lat + step / 2, box)
                 d.ellipse([px - 2.0, py - 2.0, px + 2.0, py + 2.0], fill=(178, 166, 143))
-    # marker offsets to stop labels colliding
-    offs = {2: (2, -1), 1: (1, 1), 11: (0, 1), 10: (0, -1)}
+    # greedy de-collision: keep every marker number readable
+    cands = [(0, 0), (0, -20), (-20, -6), (20, -6), (0, 20), (-15, -18), (15, -18),
+             (-15, 18), (15, 18), (-26, 0), (26, 0), (0, -30), (0, 30)]
+    placed = []
+    r = 9
     for num, lon, lat, col, orbit in markers:
-        px, py = project(lon, lat, box)
-        dx, dy = offs.get(num, (0, 0))
-        px += dx * 7
-        py += dy * 7
-        r = 9
+        bx, by = project(lon, lat, box)
+        px, py = bx, by
+        for dx, dy in cands:
+            cx_, cy_ = bx + dx, by + dy
+            if all((cx_ - qx) ** 2 + (cy_ - qy) ** 2 >= (2 * r + 6) ** 2 for qx, qy in placed):
+                px, py = cx_, cy_
+                break
+        placed.append((px, py))
+        px = min(max(px, box[0] + r + 1), box[2] - r - 1)
+        py = min(max(py, box[1] + r + 1), box[3] - r - 1)
         if orbit:
-            d.ellipse([px - r, py - r, px + r, py + r], fill=PAPER, outline=col, width=3)
-            d.line([(px - r - 5, py), (px + r + 5, py)], fill=col, width=1)
-            d.line([(px, py - r - 5), (px, py + r + 5)], fill=col, width=1)
-        else:
-            d.ellipse([px - r, py - r, px + r, py + r], fill=col, outline=INK, width=2)
-        f = F(10, bold=True)
+            d.ellipse([px - r - 4, py - r - 4, px + r + 4, py + r + 4], outline=col, width=2)
+        d.ellipse([px - r, py - r, px + r, py + r], fill=col, outline=INK, width=2)
+        f = F(10.5, bold=True)
         d.text((px, py + 0.5), str(num), font=f, fill=PAPER, anchor="mm")
 
 
@@ -535,7 +542,7 @@ def build():
 
     # legend, two rows of swatches, each with its story count
     lx, ly = M, by0 + 24
-    f_lg = F(10, bold=True)
+    f_lg = F(10.5, bold=True)
     for i, (name, col) in enumerate(REGIONS):
         if i == 4:
             lx, ly = M, by0 + 40
@@ -547,7 +554,7 @@ def build():
     markers = [(c["n"], c["lon"], c["lat"], RCOL[c["region"]], c.get("orbit", False)) for c in CARDS]
     draw_map(d, map_box, markers)
 
-    f_cap = F(10.5)
+    f_cap = F(11)
     cap1 = "Dots are land at 5 degrees. Markers are the eleven drawn cards, coloured by region;"
     cap2 = "briefs 12-35 are not plotted. Marker 7 rings an orbital event, not a country."
     yy = map_box[3] + 6
@@ -564,7 +571,7 @@ def build():
     colw = (bw - 10) / 2
     per_col = 12
     f_b = F(11)
-    f_bn = F(10, bold=True)
+    f_bn = F(10.5, bold=True)
     for i, (num, place, txt) in enumerate(BRIEFS):
         col = i // per_col
         row = i % per_col
@@ -612,10 +619,10 @@ def card(d, box, c, wide):
     by = y0 + illo_h + 7
     r = 9
     d.ellipse([x0 + 7, by - 1, x0 + 7 + 2 * r, by - 1 + 2 * r], fill=col, outline=INK)
-    d.text((x0 + 7 + r, by - 1 + r), str(c["n"]), font=F(10, bold=True), fill=PAPER, anchor="mm")
+    d.text((x0 + 7 + r, by - 1 + r), str(c["n"]), font=F(10.5, bold=True), fill=PAPER, anchor="mm")
 
     kicker = (c["region"] + " \u00b7 " + c["field"]).upper()
-    fk = F(9, bold=True)
+    fk = F(9.5, bold=True)
     kx = x0 + 27
     maxk = w - 32
     ktrack = 1.2
