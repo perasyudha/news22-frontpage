@@ -151,7 +151,7 @@ CARDS = [
          lon=6.3, lat=4.9),
     dict(n=6, region="Asia", field="INDUSTRY", place="Cikande, Indonesia",
          head="Java candy factory fire leaves 50 missing",
-         deck="Seven body bags recovered; DNA samples taken from families",
+         deck="Seven body bags recovered; DNA sought from families",
          card="Rescuers searched for about 50 workers a day after the blaze at PT Fonusa Agung Mulia in Banten.",
          lon=106.2, lat=-6.1),
     dict(n=7, region="Global", field="SCIENCE", place="Mercury orbit",
@@ -186,10 +186,10 @@ BRIEFS = [
     (13, "Pakistan", "Foreign minister hopeful on a US-Iran deal, warns against a long war."),
     (14, "Bahrain", "Two wounded in Iranian attacks; Pakistani resident critical."),
     (15, "Syria", "Authorities destroy 400 million Captagon pills in record haul."),
-    (16, "Sudan", "Burhan downplays RSF advances in Blue Nile, vows to fight on."),
+    (16, "Sudan", "Army rules out a ceasefire before Blue Nile is cleared."),
     (17, "DR Congo", "Ebola outbreak passes 11,000 cases and 5,500 deaths."),
     (18, "Congo", "Four-way Oyo summit: Tshisekedi, Ruto, Gnassingbe, Sassou-Nguesso."),
-    (19, "Ghana", "PhD admissions frozen nationwide pending an audit of training."),
+    (19, "Ghana", "Doctoral admissions frozen while training standards are audited."),
     (20, "Thailand", "Bangkok to block rare-earth chemicals bound for Myanmar."),
     (21, "North Korea", "Pyongyang marathon moved from April to October."),
     (22, "Bangladesh", "Deadly protests over exiled Hasina; PM Rahman blames India."),
@@ -551,7 +551,8 @@ def build():
         d.text((lx + 13, ly - 0.5), label, font=f_lg, fill=INK)
         lx += 13 + spaced_w(d, label, f_lg, 1.0) + 14
 
-    markers = [(c["n"], c["lon"], c["lat"], RCOL[c["region"]], c.get("orbit", False)) for c in CARDS]
+    markers = [(c["n"], c["lon"], c["lat"], RCOL[c["region"]], c.get("orbit", False))
+               for c in CARDS if not c.get("orbit")]
     draw_map(d, map_box, markers)
 
     f_cap = F(11)
