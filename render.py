@@ -538,7 +538,7 @@ def build():
     map_box = (M, by0 + 58, M + map_w, by1 - 46)
     f_h = F(11, bold=True)
     spaced(d, (M, by0 + 4), "WHERE IT HAPPENED", f_h, INK, 1.8)
-    d.text((M + map_w, by0 + 4), "markers = cards 1-11", font=F(10.5), fill=MUTED, anchor="ra")
+    d.text((M + map_w, by0 + 4), "markers = cards 1-11 but 7 (orbital)", font=F(10.5), fill=MUTED, anchor="ra")
 
     # legend, two rows of swatches, each with its story count
     lx, ly = M, by0 + 24
